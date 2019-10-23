@@ -1,10 +1,13 @@
 package lesson1
 
 import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.assertThrows
 import util.PerfResult
 import util.estimate
 import java.io.BufferedWriter
 import java.io.File
+import java.io.IOException
 import java.util.*
 import kotlin.math.abs
 import kotlin.system.measureNanoTime
@@ -45,6 +48,22 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         } finally {
             File("temp.txt").delete()
         }
+        try {
+            sortTimes("input/emptyFileForTest.txt", "temp.txt")
+        } catch (e: Exception) {
+            assertTrue(true)
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortTimes("input/killerFile.txt", "temp.txt")
+        } catch (e: Exception) {
+            assertTrue(true)
+        } finally {
+            File("temp.txt").delete()
+        }
+
+
     }
 
     protected fun sortAddresses(sortAddresses: (String, String) -> Unit) {
@@ -70,6 +89,20 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         try {
             sortAddresses("input/addr_in3.txt", "temp.txt")
             assertFileContent("temp.txt", File("input/addr_out3.txt").readLines())
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortAddresses("input/emptyFileForTest.txt", "temp.txt")
+        } catch (e: Exception) {
+            assertTrue(true)
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortAddresses("input/killerFile.txt", "temp.txt")
+        } catch (e: Exception) {
+            assertTrue(true)
         } finally {
             File("temp.txt").delete()
         }
@@ -115,6 +148,20 @@ abstract class AbstractTaskTests : AbstractFileTests() {
                     121.3
                 """.trimIndent()
             )
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortTemperatures("input/emptyFileForTest.txt", "temp.txt")
+        } catch (e: Exception) {
+            assertTrue(true)
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortTemperatures("input/killerFile.txt", "temp.txt")
+        } catch (e: Exception) {
+            assertTrue(true)
         } finally {
             File("temp.txt").delete()
         }
@@ -277,6 +324,20 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         } finally {
             File("temp.txt").delete()
         }
+        try {
+            sortSequence("input/emptyFileForTest.txt", "temp.txt")
+        } catch (e: Exception) {
+            assertTrue(true)
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortSequence("input/killerFile.txt", "temp.txt")
+        } catch (e: Exception) {
+            assertTrue(true)
+        } finally {
+            File("temp.txt").delete()
+        }
 
         fun testGeneratedSequence(totalSize: Int, answerSize: Int): PerfResult<Unit> {
             try {
@@ -326,6 +387,14 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         val result = arrayOf(null, null, null, null, null, 1, 3, 9, 13, 18, 23)
         mergeArrays(arrayOf(4, 9, 15, 20, 23), result)
         assertArrayEquals(arrayOf(1, 3, 4, 9, 9, 13, 15, 18, 20, 23, 23), result)
+
+        val result1 = arrayOf(null, null, null, null, null, 1.0, 3.0, 9.0, 13.0, 18.0, 23.0)
+        JavaTasks.mergeArrays(arrayOf(4.0, 9.0, 15.0, 20.0, 23.0), result1)
+        assertArrayEquals(arrayOf(1.0, 3.0, 4.0, 9.0, 9.0, 13.0, 15.0, 18.0, 20.0, 23.0, 23.0), result1)
+
+        val result2 = arrayOf(null, "you", "loh")
+        JavaTasks.mergeArrays(arrayOf("kekcheburek"), result2)
+        assertArrayEquals(arrayOf("kekcheburek", "loh", "you"), result2)
 
         fun testGeneratedArrays(
             firstSize: Int,

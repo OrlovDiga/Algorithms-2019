@@ -257,6 +257,6 @@ public class JavaAlgorithms {
 
     /*
      *Time complexity = O(lengthMatrix * weightMatrix * wordsLength)
-     *Resource complexity = O(?)
+     *Resource complexity = O(lengthMatrix * weightMatrix * wordsLength)
      */
 }

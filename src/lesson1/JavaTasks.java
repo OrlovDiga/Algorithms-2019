@@ -42,7 +42,7 @@ public class JavaTasks {
      * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public void sortTimes(String inputName, String outputName) throws IOException, ParseException {
+    static public void sortTimes(String inputName, String outputName) throws Exception {
         SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss a");
         List<String> stringsOfDate = Files.readAllLines(Paths.get(inputName), StandardCharsets.UTF_8);
         List<Date> dates = new ArrayList<>();
@@ -96,13 +96,14 @@ public class JavaTasks {
      * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public void sortAddresses(String inputName, String outputName) throws IOException {
+    static public void sortAddresses(String inputName, String outputName) throws Exception {
         List<String> stringList = Files.readAllLines(Paths.get(inputName), StandardCharsets.UTF_8);
         Map<String, List<String>> data = new TreeMap<>(
                 Comparator.comparing(s -> s.toString().replaceAll("\\d", ""))
                           .thenComparing(s -> Integer.parseInt(s.toString().replaceAll("\\D", ""))));
 
         for(int i = 0; i < stringList.size(); i++) {
+            // array with length = 2, where first element it is address and zero element it is person
             String[] temp = stringList.get(i).split(" - ");
             if (!data.containsKey(temp[1])) {
                 data.put(temp[1], new ArrayList<>());

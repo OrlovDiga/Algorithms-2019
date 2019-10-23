@@ -1,5 +1,7 @@
 package lesson2
 
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.assertThrows
 import java.io.BufferedWriter
 import java.io.File
 import java.util.*
@@ -66,6 +68,8 @@ abstract class AbstractAlgorithmsTests {
         assertEquals(50000000, josephTask(50000000, 1))
         assertEquals(3, josephTask(8, 5))
         assertEquals(28, josephTask(40, 3))
+        assertEquals(123, josephTask(123, 1))
+
         var menNumber = 2
         for (i in 1..20) {
             assertEquals(1, josephTask(menNumber, 2))
@@ -75,6 +79,7 @@ abstract class AbstractAlgorithmsTests {
 
     fun longestCommonSubstring(longestCommonSubstring: (String, String) -> String) {
         assertEquals("", longestCommonSubstring("мой мир", "я"))
+        assertEquals("анна", longestCommonSubstring("Саванна®", "Сюзанна"))
         assertEquals("зд", longestCommonSubstring("здравствуй мир", "мы здесь"))
         assertEquals("СЕРВАТОР", longestCommonSubstring("ОБСЕРВАТОРИЯ", "КОНСЕРВАТОРЫ"))
         assertEquals(
@@ -124,6 +129,7 @@ abstract class AbstractAlgorithmsTests {
 
     fun calcPrimesNumber(calcPrimesNumber: (Int) -> Int) {
         assertEquals(0, calcPrimesNumber(-1))
+        assertEquals(0, calcPrimesNumber(0))
         assertEquals(0, calcPrimesNumber(1))
         assertEquals(1, calcPrimesNumber(2))
         assertEquals(2, calcPrimesNumber(4))
@@ -150,6 +156,10 @@ abstract class AbstractAlgorithmsTests {
         assertEquals(
             setOf("ТРАВА", "КРАН", "АКВА", "НАРТЫ"),
             baldaSearcher("input/balda_in1.txt", setOf("ТРАВА", "КРАН", "АКВА", "НАРТЫ", "РАК"))
+        )
+        assertEquals(
+            setOf("ЯНА", "АННА", "ВАНТУЗ", "ТУЗ", "ТАЗ", "ВАННА", "АНЯ", "ТАБУН", "НУБ"),
+            baldaSearcher("input/balda_in4.txt", setOf("ЯНА", "АННА", "ВАНТУЗ", "ТУЗ", "ТАЗ", "ВАННА", "АНЯ", "ТАБУН", "НУБ"))
         )
         assertEquals(
             setOf("БАЛДА"),
