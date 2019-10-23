@@ -7,7 +7,7 @@ class AlgorithmsTestsJava : AbstractAlgorithmsTests() {
     @Test
     @Tag("Easy")
     fun testOptimizeBuyAndSell() {
-        optimizeBuyAndSell { JavaAlgorithms.optimizeBuyAndSell(it) }
+         optimizeBuyAndSell { JavaAlgorithms.optimizeBuyAndSell(it) }
     }
 
     @Test

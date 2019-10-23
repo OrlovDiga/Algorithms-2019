@@ -75,7 +75,31 @@ public class Sorts {
         }
     }
 
+    private static void heapify(double[] elements, int start, int length) {
+        int left = 2 * start + 1;
+        int right = left + 1;
+        int max = start;
+        if (left < length && elements[left] > elements[max]) {
+            max = left;
+        }
+        if (right < length && elements[right] > elements[max]) {
+            max = right;
+        }
+        if (max != start) {
+            double temp = elements[max];
+            elements[max] = elements[start];
+            elements[start] = temp;
+            heapify(elements, max, length);
+        }
+    }
+
     private static void buildHeap(int[] elements) {
+        for (int start = elements.length / 2 - 1; start >= 0; start--) {
+            heapify(elements, start, elements.length);
+        }
+    }
+
+    private static void buildHeap(double[] elements) {
         for (int start = elements.length / 2 - 1; start >= 0; start--) {
             heapify(elements, start, elements.length);
         }
@@ -85,6 +109,16 @@ public class Sorts {
         buildHeap(elements);
         for (int j = elements.length - 1; j >= 1; j--) {
             int temp = elements[0];
+            elements[0] = elements[j];
+            elements[j] = temp;
+            heapify(elements, 0, j);
+        }
+    }
+
+    public static void heapSort(double[] elements) {
+        buildHeap(elements);
+        for (int j = elements.length - 1; j >= 1; j--) {
+            double temp = elements[0];
             elements[0] = elements[j];
             elements[j] = temp;
             heapify(elements, 0, j);
