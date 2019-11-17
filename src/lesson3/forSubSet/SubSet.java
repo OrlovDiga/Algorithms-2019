@@ -6,13 +6,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.SortedSet;
-import java.util.function.Predicate;
 
 public class SubSet<T extends Comparable<T>> extends AbstractMutableSet<T> implements SortedSet<T> {
     private final SortedSet<T> delegate;
     private final T fromElement;
     private final T toElement;
+
 
     public SubSet(SortedSet<T> delegate, T fromElement, T toElement) {
         this.delegate = delegate;
@@ -20,10 +21,75 @@ public class SubSet<T extends Comparable<T>> extends AbstractMutableSet<T> imple
         this.toElement = toElement;
     }
 
+    public class SubSetIterator implements Iterator<T> {
+        private Iterator delegate = SubSet.this.delegate.iterator();
+        private T next = null;
+
+        public SubSetIterator() {
+            while (delegate.hasNext()) {
+                if (fromElement == null) {
+                    this.next = (T) delegate.next();
+                    break;
+                }
+
+                T next = (T) delegate.next();
+
+                if (next.compareTo(fromElement) >= 0) {
+                    this.next = next;
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (next == null) {
+                return false;
+            }
+
+            T n = next;
+
+            if (toElement != null && n.compareTo(toElement) >= 0) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public T next() {
+            if (next == null) {
+                throw new NoSuchElementException();
+            }
+
+            T result = next;
+
+            if (delegate.hasNext()) {
+                next = (T) delegate.next();
+            } else {
+                next = null;
+            }
+
+            return result;
+        }
+
+        @Override
+        public void remove() {
+            delegate.remove();
+        }
+    }
+
 
     @Override
     public int getSize() {
-        return 0;
+        int size = 0;
+        Iterator iter = iterator();
+        while (iter.hasNext()) {
+            iter.next();
+            size++;
+        }
+
+        return size;
     }
 
     @Override
@@ -33,7 +99,34 @@ public class SubSet<T extends Comparable<T>> extends AbstractMutableSet<T> imple
 
     @Override
     public boolean add(T t) {
-        return false;
+        if (fromElement == null && toElement == null) {
+            throw new IllegalArgumentException();
+        } else if (fromElement == null && toElement.compareTo((T) t) > 0) {
+            return delegate.add(t);
+        } else if (toElement == null && fromElement.compareTo(t) < 0) {
+            return delegate.add(t);
+        } else if (fromElement != null && toElement != null && t.compareTo(fromElement) >= 0 && t.compareTo(toElement) == -1) {
+            return delegate.add(t);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public boolean remove(T t) {
+        if (fromElement == null && toElement == null) {
+            return false;
+        }
+        if (fromElement == null && t.compareTo(toElement) == -1) {
+            return delegate.remove(t);
+        }
+        if (toElement == null && t.compareTo(fromElement) >= 0) {
+            return delegate.remove(t);
+        }
+        if (t.compareTo(fromElement) >= 0 && t.compareTo(toElement) == -1) {
+            return delegate.remove(t);
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -50,49 +143,36 @@ public class SubSet<T extends Comparable<T>> extends AbstractMutableSet<T> imple
     @NotNull
     @Override
     public SortedSet<T> subSet(T fromElement, T toElement) {
-        return null;
+        return new SubSet<T>(this, fromElement, toElement);
     }
 
     @NotNull
     @Override
     public SortedSet<T> headSet(T toElement) {
-        return null;
+        return new SubSet<T>(this, null, toElement);
     }
 
     @NotNull
     @Override
     public SortedSet<T> tailSet(T fromElement) {
-        return null;
+        return new SubSet<T>(this, fromElement, toElement);
     }
 
     @Override
     public T first() {
-        return null;
+        return iterator().next();
     }
 
     @Override
     public T last() {
-        return null;
-    }
+        Iterator<T> iterator = iterator();
+        T element = iterator.next();
 
-    public class SubSetIterator implements Iterator<T> {
-        private TreeNode visit;
-        private Stack<>
-
-        @Override
-        public boolean hasNext() {
-            return false;
+        while (iterator.hasNext()) {
+            element = iterator.next();
         }
 
-        @Override
-        public T next() {
-            return null;
-        }
-
-        @Override
-        public void remove() {
-
-        }
+        return element;
     }
 }
 
