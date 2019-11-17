@@ -19,9 +19,11 @@ public class MainCheck {
         tree.add(7);
         tree.add(22);
 
-        SortedSet set = tree.headSet(4);
+        SortedSet set = tree.subSet(null, null);
 
         tree.add(0);
+
+
 
         Iterator iter =  set.iterator();
         while (iter.hasNext()) {

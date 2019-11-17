@@ -132,8 +132,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             return false;
         }
         /**
-        *  case 1: when the remove's node is a leaf
-        */
+         * case 1: when the remove's node is a leaf
+         */
          if (currentNode.right == null && currentNode.left == null) {
             if (currentNode != root) {
                 if (parentNode.left == currentNode) {
@@ -146,7 +146,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             }
         }
         /**
-         *  case 2: when the remove's node has two children
+         * case 2: when the remove's node has two children
          */
         else if (currentNode.left != null && currentNode.right != null) {
             Node<T> successor = findSmallestValue(currentNode.right);
@@ -155,7 +155,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             currentNode.value = val;
         }
         /**
-         *  case 3: when the remove's node has one child
+         * case 3: when the remove's node has one child
          */
         else {
             Node<T> child = (currentNode.left != null) ? currentNode.left : currentNode.right;
@@ -281,6 +281,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             current = current.left;
         }
         return current.value;
+    }
+
+    public void onesize() {
+        size++;
     }
 
     @Override

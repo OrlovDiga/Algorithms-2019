@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.SortedSet;
 
 public class SubSet<T extends Comparable<T>> extends AbstractMutableSet<T> implements SortedSet<T> {
@@ -22,54 +21,36 @@ public class SubSet<T extends Comparable<T>> extends AbstractMutableSet<T> imple
     }
 
     public class SubSetIterator implements Iterator<T> {
-        private Iterator delegate = SubSet.this.delegate.iterator();
-        private T next = null;
+        private Iterator<T> delegate = SubSet.this.delegate.iterator();
+        private T nextNode = null;
 
         public SubSetIterator() {
-            while (delegate.hasNext()) {
-                if (fromElement == null) {
-                    this.next = (T) delegate.next();
-                    break;
-                }
+            /**
+             *search first need node
+             */
+            if (fromElement == null) {
+                this.nextNode = delegate.next();
+            } else {
+                while (delegate.hasNext()) {
+                    T currentNode = delegate.next();
 
-                T next = (T) delegate.next();
-
-                if (next.compareTo(fromElement) >= 0) {
-                    this.next = next;
-                    break;
+                    if (currentNode.compareTo(fromElement) >= 0) {
+                        this.nextNode = currentNode;
+                        break;
+                    }
                 }
             }
         }
 
         @Override
         public boolean hasNext() {
-            if (next == null) {
-                return false;
-            }
-
-            T n = next;
-
-            if (toElement != null && n.compareTo(toElement) >= 0) {
-                return false;
-            }
-
-            return true;
+            return nextNode != null && (toElement == null || nextNode.compareTo(toElement) < 0);
         }
 
         @Override
         public T next() {
-            if (next == null) {
-                throw new NoSuchElementException();
-            }
-
-            T result = next;
-
-            if (delegate.hasNext()) {
-                next = (T) delegate.next();
-            } else {
-                next = null;
-            }
-
+            T result = nextNode;
+            nextNode = (delegate.hasNext()) ? delegate.next() : null;
             return result;
         }
 
@@ -79,55 +60,67 @@ public class SubSet<T extends Comparable<T>> extends AbstractMutableSet<T> imple
         }
     }
 
-
+    //Да, с размером произошла ситуация не очень, но если вы знаете как можно улучшить, подскажите плес
     @Override
     public int getSize() {
         int size = 0;
-        Iterator iter = iterator();
-        while (iter.hasNext()) {
-            iter.next();
+        for (T t : this) {
             size++;
         }
 
         return size;
     }
 
+    @NotNull
     @Override
     public Iterator<T> iterator() {
         return new SubSetIterator();
     }
 
     @Override
-    public boolean add(T t) {
-        if (fromElement == null && toElement == null) {
-            throw new IllegalArgumentException();
-        } else if (fromElement == null && toElement.compareTo((T) t) > 0) {
-            return delegate.add(t);
-        } else if (toElement == null && fromElement.compareTo(t) < 0) {
-            return delegate.add(t);
-        } else if (fromElement != null && toElement != null && t.compareTo(fromElement) >= 0 && t.compareTo(toElement) == -1) {
-            return delegate.add(t);
+    public boolean add(T node) {
+        if (fromElement == null && toElement.compareTo(node) > 0) {
+            return delegate.add(node);
+        } else if (toElement == null && fromElement.compareTo(node) < 0) {
+            return delegate.add(node);
+        } else if (fromElement != null && toElement != null
+                   && node.compareTo(fromElement) >= 0 && node.compareTo(toElement) < 0) {
+            return delegate.add(node);
         } else {
             throw new IllegalArgumentException();
         }
     }
 
-    public boolean remove(T t) {
-        if (fromElement == null && toElement == null) {
-            return false;
-        }
-        if (fromElement == null && t.compareTo(toElement) == -1) {
-            return delegate.remove(t);
-        }
-        if (toElement == null && t.compareTo(fromElement) >= 0) {
-            return delegate.remove(t);
-        }
-        if (t.compareTo(fromElement) >= 0 && t.compareTo(toElement) == -1) {
-            return delegate.remove(t);
+    public boolean remove(T node) {
+        if (fromElement == null && node.compareTo(toElement) < 0) {
+            return delegate.remove(node);
+        } else if (toElement == null && node.compareTo(fromElement) >= 0) {
+            return delegate.remove(node);
+        } else if (fromElement != null && toElement != null
+                   && node.compareTo(fromElement) >= 0 && node.compareTo(toElement) < 0) {
+            return delegate.remove(node);
         } else {
-            return false;
+            throw new IllegalArgumentException();
         }
     }
+
+/* У меня есть проблема, я хотел реализовать методы add and remove через отдельный метод,
+ но не вышло, так как в аргументе у нас копия, а не сам объект. Вопрос, можно ли это как-то по другому провернуть, сократив ненужный код ?
+ P.S. на название тут, пожалуйста, не смотрите, ибо это просто было написано на скорую руку для проверки будет ли вообще работать или нет
+    private boolean lambdaMethod(boolean method , T node) {
+        if (fromElement == null && toElement == null) {
+            throw new IllegalArgumentException();
+        } else if (fromElement == null && toElement.compareTo((T) node) > 0) {
+            return method;
+        } else if (toElement == null && fromElement.compareTo(node) < 0) {
+            return method;
+        } else if (fromElement != null && toElement != null && node.compareTo(fromElement) >= 0 && node.compareTo(toElement) == -1) {
+            return method;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+*/
 
     @Override
     public boolean remove(Object o) {
@@ -143,19 +136,19 @@ public class SubSet<T extends Comparable<T>> extends AbstractMutableSet<T> imple
     @NotNull
     @Override
     public SortedSet<T> subSet(T fromElement, T toElement) {
-        return new SubSet<T>(this, fromElement, toElement);
+        return new SubSet<>(this, fromElement, toElement);
     }
 
     @NotNull
     @Override
     public SortedSet<T> headSet(T toElement) {
-        return new SubSet<T>(this, null, toElement);
+        return new SubSet<>(this, null, toElement);
     }
 
     @NotNull
     @Override
     public SortedSet<T> tailSet(T fromElement) {
-        return new SubSet<T>(this, fromElement, toElement);
+        return new SubSet<>(this, fromElement, toElement);
     }
 
     @Override
