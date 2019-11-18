@@ -1,11 +1,8 @@
 package lesson3
 
 import org.junit.jupiter.api.Tag
-import kotlin.test.Test
 import java.util.*
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class BinaryTreeTest {
     private fun testAdd(create: () -> CheckableSortedSet<Int>) {
@@ -84,16 +81,31 @@ class BinaryTreeTest {
         }
     }
 
+    private fun testingRemoveMethod(create: () -> CheckableSortedSet<String>) {
+        val listOfValues = setOf<String>("hi", "kek", "lol", "jon", "andrew", "lex", "wow", "Petr")
+        val binarySet = create()
+
+        for (value in listOfValues) {
+            binarySet.add(value)
+        }
+
+        assertFalse(binarySet.remove("juba"))
+        assertTrue(binarySet.remove("wow"))
+        assertTrue(binarySet.remove("lol"))
+    }
+
     @Test
     @Tag("Normal")
     fun testRemoveKotlin() {
         testRemove { createKotlinTree() }
+        testingRemoveMethod { createKotlinTree() }
     }
 
     @Test
     @Tag("Normal")
     fun testRemoveJava() {
         testRemove { createJavaTree() }
+        testingRemoveMethod { createJavaTree() }
     }
 
     private fun testIterator(create: () -> CheckableSortedSet<Int>) {
@@ -129,6 +141,24 @@ class BinaryTreeTest {
         }
     }
 
+    private fun testIteratorNumberTwo(create: () -> CheckableSortedSet<String>) {
+        val binarySet = create()
+        val list = mutableListOf<String>()
+        val iterator = binarySet.iterator()
+
+        val listOfElements = setOf<String>("a", "b", "c", "d", "e", "f", "g", "k", "h", "o")
+
+        for(i in listOfElements) {
+            binarySet.add(i)
+        }
+
+        while(iterator.hasNext()) {
+            assertNotNull(iterator.next())
+        }
+
+
+    }
+
     @Test
     @Tag("Normal")
     fun testIteratorKotlin() {
@@ -139,6 +169,8 @@ class BinaryTreeTest {
     @Tag("Normal")
     fun testIteratorJava() {
         testIterator { createJavaTree() }
+        testIteratorNumberTwo { createJavaTree() }
+
     }
 
     private fun testIteratorRemove(create: () -> CheckableSortedSet<Int>) {

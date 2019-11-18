@@ -25,9 +25,7 @@ public class SubSet<T extends Comparable<T>> extends AbstractMutableSet<T> imple
         private T nextNode = null;
 
         public SubSetIterator() {
-            /**
-             *search first need node
-             */
+            //search first need node
             if (fromElement == null) {
                 this.nextNode = delegate.next();
             } else {
@@ -159,13 +157,13 @@ public class SubSet<T extends Comparable<T>> extends AbstractMutableSet<T> imple
     @Override
     public T last() {
         Iterator<T> iterator = iterator();
-        T element = iterator.next();
+        T tempNode = iterator.next();
 
         while (iterator.hasNext()) {
-            element = iterator.next();
+            tempNode = iterator.next();
         }
 
-        return element;
+        return tempNode;
     }
 }
 

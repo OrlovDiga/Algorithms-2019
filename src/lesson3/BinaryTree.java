@@ -1,7 +1,6 @@
 package lesson3;
 
 import kotlin.NotImplementedError;
-import kotlin.collections.AbstractMutableSet;
 import lesson3.forSubSet.SubSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -96,13 +95,17 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @Override
     public boolean remove(Object o) {
-        if (deleteNode(root, (T)o)) {
+        if (deleteNode(root, (T) o)) {
             size--;
             return true;
         }
 
         return false;
     }
+    /**
+     * Time complexity O(h)
+     * Space complexity O(1)
+     */
 
     private Node<T> findSmallestValue(Node<T> root) {
         return root.left == null ? root : findSmallestValue(root.left);
@@ -111,9 +114,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     private boolean deleteNode(Node<T> root, T value) {
         Node<T> parentNode = null; //pointer of current's parent node
         Node<T> currentNode = root;
-        /**
-        *  find remove's node and his parent node
-        */
+
+        // find remove's node and his parent node
         while (currentNode != null && currentNode.value != value) {
             parentNode = currentNode;
 
@@ -124,16 +126,14 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
                 currentNode = currentNode.right;
             }
         }
-        /**
-        *  if the key is not found then return false
-        */
+
+        //if the key is not found then return false
         if (currentNode == null) {
             this.root = root;
             return false;
         }
-        /**
-         * case 1: when the remove's node is a leaf
-         */
+
+         //case 1: when the remove's node is a leaf
          if (currentNode.right == null && currentNode.left == null) {
             if (currentNode != root) {
                 if (parentNode.left == currentNode) {
@@ -145,18 +145,16 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
                 this.root = null;
             }
         }
-        /**
-         * case 2: when the remove's node has two children
-         */
+
+        // case 2: when the remove's node has two children
         else if (currentNode.left != null && currentNode.right != null) {
             Node<T> successor = findSmallestValue(currentNode.right);
             T val = successor.value;
             deleteNode(root, successor.value);
             currentNode.value = val;
         }
-        /**
-         * case 3: when the remove's node has one child
-         */
+
+        // case 3: when the remove's node has one child
         else {
             Node<T> child = (currentNode.left != null) ? currentNode.left : currentNode.right;
 
@@ -199,6 +197,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         public boolean hasNext() {
             return visit != null || !stack.isEmpty();
         }
+        /**
+         * Time complexity O(1)
+         * Space complexity O(h)
+         */
 
         /**
          * Поиск следующего элемента
@@ -215,6 +217,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             visit = next.right;
             return next.value;
         }
+        /**
+         * Time complexity O(1)
+         * Space complexity O(h)
+         */
 
         /**
          * Удаление следующего элемента
@@ -222,7 +228,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          */
         @Override
         public void remove() throws NoSuchElementException {
-            BinaryTree.this.remove(next());
+            throw new NotImplementedError();
         }
     }
 
@@ -240,7 +246,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     @Nullable
     @Override
     public Comparator<? super T> comparator() {
-        return (o1, o2) -> o1.compareTo(o2);
+        return Comparator.naturalOrder();
     }
 
     /**
@@ -252,6 +258,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     public SortedSet<T> subSet(T fromElement, T toElement) {
         return new SubSet<>(this, fromElement, toElement);
     }
+    /**
+     * Time complexity O(h)
+     * Space complexity O(1)
+     */
 
     /**
      * Найти множество всех элементов меньше заданного
@@ -262,6 +272,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     public SortedSet<T> headSet(T toElement) {
         return new SubSet<>(this, null, toElement);
     }
+    /**
+     * Time complexity O(h)
+     * Space complexity O(1)
+     */
 
     /**
      * Найти множество всех элементов больше или равных заданного
@@ -272,6 +286,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     public SortedSet<T> tailSet(T fromElement) {
         return new SubSet<>(this, fromElement, null);
     }
+    /**
+     * Time complexity O(h)
+     * Space complexity O(1)
+     */
 
     @Override
     public T first() {
@@ -281,10 +299,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             current = current.left;
         }
         return current.value;
-    }
-
-    public void onesize() {
-        size++;
     }
 
     @Override
