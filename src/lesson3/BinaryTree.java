@@ -104,7 +104,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     }
     /**
      * Time complexity O(h)
-     * Space complexity O(1)
+     * Memory complexity O(1)
      */
 
     private Node<T> deleteRootNode(Node<T> root) {
@@ -190,7 +190,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         }
         /**
          * Time complexity O(1)
-         * Space complexity O(h)
+         * Memory complexity O(h)
          */
 
         /**
@@ -210,7 +210,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         }
         /**
          * Time complexity O(1)
-         * Space complexity O(h)
+         * Memory complexity O(h)
          */
 
         /**
@@ -251,7 +251,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     }
     /**
      * Time complexity O(h)
-     * Space complexity O(1)
+     * Memory complexity O(1)
      */
 
     /**
@@ -265,7 +265,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     }
     /**
      * Time complexity O(h)
-     * Space complexity O(1)
+     * Memory complexity O(1)
      */
 
     /**
@@ -279,7 +279,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     }
     /**
      * Time complexity O(h)
-     * Space complexity O(1)
+     * Memory complexity O(1)
      */
 
     @Override

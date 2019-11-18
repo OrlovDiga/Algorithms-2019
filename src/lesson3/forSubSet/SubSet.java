@@ -13,7 +13,6 @@ public class SubSet<T extends Comparable<T>> extends AbstractMutableSet<T> imple
     private final T fromElement;
     private final T toElement;
 
-
     public SubSet(SortedSet<T> delegate, T fromElement, T toElement) {
         this.delegate = delegate;
         this.fromElement = fromElement;
