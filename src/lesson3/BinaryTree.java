@@ -11,7 +11,7 @@ import java.util.*;
 public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implements CheckableSortedSet<T>{
 
     protected static class Node<T> {
-        T value;
+        final T value;
 
         Node<T> left = null;
 
@@ -95,7 +95,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @Override
     public boolean remove(Object o) {
-        if (deleteNodeTest(root, (T) o)) {
+        if (deleteNode(root, (T) o)) {
             size--;
             return true;
         }
@@ -118,19 +118,20 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             return root.left;
         }
 
-        Node<T> next = root.right;
-        Node<T> pre = null;
+        Node<T> nextNode = root.right;
+        Node<T> parentNode = null;
 
-        for(; next.left != null; pre = next, next = next.left);
-        next.left = root.left;
-        if(root.right != next) {
-            pre.left = next.right;
-            next.right = root.right;
+        for(; nextNode.left != null; parentNode = nextNode, nextNode = nextNode.left);
+        nextNode.left = root.left;
+        if(root.right != nextNode) {
+            parentNode.left = nextNode.right;
+            nextNode.right = root.right;
         }
-        return next;
+
+        return nextNode;
     }
 
-    private boolean deleteNodeTest(Node<T> root, T value) {
+    private boolean deleteNode(Node<T> root, T value) {
         Node<T> currentNode = root;
         Node<T> parentNode = null;
 
@@ -190,7 +191,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         }
         /**
          * Time complexity O(1)
-         * Memory complexity O(h)
+         * Memory complexity O(1)
          */
 
         /**
@@ -250,7 +251,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         return new SubSet<>(this, fromElement, toElement);
     }
     /**
-     * Time complexity O(h)
+     * Time complexity O(fromElement)
      * Memory complexity O(1)
      */
 
@@ -264,7 +265,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         return new SubSet<>(this, null, toElement);
     }
     /**
-     * Time complexity O(h)
+     * Time complexity O(1)
      * Memory complexity O(1)
      */
 
@@ -278,7 +279,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         return new SubSet<>(this, fromElement, null);
     }
     /**
-     * Time complexity O(h)
+     * Time complexity O(fromElement)
      * Memory complexity O(1)
      */
 
