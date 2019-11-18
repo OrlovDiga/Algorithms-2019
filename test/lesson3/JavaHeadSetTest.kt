@@ -27,12 +27,14 @@ class JavaHeadSetTest : AbstractHeadTailTest() {
     @Tag("Normal")
     fun tailSetTest() {
         doTailSetTest()
+        doTailSetTestNumberTwo()
     }
 
     @Test
     @Tag("Hard")
     fun tailSetRelationTest() {
         doTailSetRelationTest()
+
     }
 
     @Test

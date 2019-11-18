@@ -73,6 +73,14 @@ abstract class AbstractHeadTailTest {
 
     }
 
+    protected fun doTailSetTestNumberTwo() {
+        var set = tree.tailSet(2)
+        assertEquals(false, set.contains(null))
+        assertEquals(false, set.contains(1))
+        assertEquals(9, set.size)
+        assertEquals(true, set.contains(6))
+    }
+
     protected fun doHeadSetRelationTest() {
         val set: SortedSet<Int> = tree.headSet(7)
         assertEquals(6, set.size)
@@ -86,6 +94,9 @@ abstract class AbstractHeadTailTest {
         assertFailsWith<IllegalArgumentException> { set.add(8) }
         assertEquals(8, set.size)
         assertEquals(13, tree.size)
+        tree.remove(1)
+        assertFalse(set.contains(1))
+
     }
 
     protected fun doHeadSetRelationTestNumberTwo() {
@@ -106,6 +117,15 @@ abstract class AbstractHeadTailTest {
         assertFailsWith<IllegalArgumentException> { set.add(-2) }
         assertEquals(9, set.size)
         assertEquals(13, tree.size)
+        tree.add(13)
+        assertTrue(set.contains(13))
+        tree.remove(13)
+        assertFalse(set.contains(13))
+    }
+
+    protected fun doTailSetRelationTestNumberTwo() {
+        val set = tree.tailSet(11)
+
     }
 
     protected fun doSubSetTest() {
@@ -154,11 +174,17 @@ abstract class AbstractHeadTailTest {
         assertFailsWith<IllegalArgumentException> { set.add(20) }
         assertEquals(11, set.size)
         assertEquals(14, tree.size)
+        assertNotEquals(15, tree.size)
+        tree.remove(15)
+        assertFalse(set.contains(15))
     }
 
     protected fun doSubRelationTestNumberTwo() {
         val set = tree.subSet(0, 1)
         assertFalse(set.contains(1))
+        set.add(0)
+        tree.add(11)
+        assertEquals(1, set.size)
     }
 
     protected fun doSubRelationTestNumberThree() {
@@ -166,17 +192,4 @@ abstract class AbstractHeadTailTest {
         assertTrue(set.contains(1))
         assertFalse(set.contains(10))
     }
-
-
-/*    tree.add(5)
-    tree.add(1)
-    tree.add(2)
-    tree.add(7)
-    tree.add(9)
-    tree.add(10)
-    tree.add(8)
-    tree.add(4)
-    tree.add(3)
-    tree.add(6)*/
-
 }
