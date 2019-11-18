@@ -95,7 +95,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @Override
     public boolean remove(Object o) {
-        if (deleteNode(root, (T) o)) {
+        if (deleteNodeTest(root, (T) o)) {
             size--;
             return true;
         }
@@ -107,66 +107,57 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      * Space complexity O(1)
      */
 
-    private Node<T> findSmallestValue(Node<T> root) {
-        return root.left == null ? root : findSmallestValue(root.left);
+    private Node<T> deleteRootNode(Node<T> root) {
+        if (root == null) {
+            return null;
+        }
+        if (root.left == null) {
+            return root.right;
+        }
+        if (root.right == null) {
+            return root.left;
+        }
+
+        Node<T> next = root.right;
+        Node<T> pre = null;
+
+        for(; next.left != null; pre = next, next = next.left);
+        next.left = root.left;
+        if(root.right != next) {
+            pre.left = next.right;
+            next.right = root.right;
+        }
+        return next;
     }
 
-    private boolean deleteNode(Node<T> root, T value) {
-        Node<T> parentNode = null; //pointer of current's parent node
+    private boolean deleteNodeTest(Node<T> root, T value) {
         Node<T> currentNode = root;
+        Node<T> parentNode = null;
 
         // find remove's node and his parent node
-        while (currentNode != null && currentNode.value != value) {
+        while(currentNode != null && currentNode.value != value) {
             parentNode = currentNode;
-
             if (value.compareTo(currentNode.value) < 0) {
                 currentNode = currentNode.left;
-            }
-            else {
+            } else if (value.compareTo(currentNode.value) > 0) {
                 currentNode = currentNode.right;
             }
         }
 
-        //if the key is not found then return false
+        //if the value is not found then return false
         if (currentNode == null) {
-            this.root = root;
             return false;
         }
 
-         //case 1: when the remove's node is a leaf
-         if (currentNode.right == null && currentNode.left == null) {
-            if (currentNode != root) {
-                if (parentNode.left == currentNode) {
-                    parentNode.left = null;
-                } else {
-                    parentNode.right = null;
-                }
-            } else {
-                this.root = null;
-            }
+        //if out remove's node it is root
+        if (parentNode == null) {
+            this.root = deleteRootNode(currentNode);
+            return true;
         }
-
-        // case 2: when the remove's node has two children
-        else if (currentNode.left != null && currentNode.right != null) {
-            Node<T> successor = findSmallestValue(currentNode.right);
-            T val = successor.value;
-            deleteNode(root, successor.value);
-            currentNode.value = val;
-        }
-
-        // case 3: when the remove's node has one child
-        else {
-            Node<T> child = (currentNode.left != null) ? currentNode.left : currentNode.right;
-
-            if (currentNode != root) {
-                if (currentNode == parentNode.left) {
-                    parentNode.left = child;
-                } else {
-                    parentNode.right = child;
-                }
-            } else {
-                this.root = child;
-            }
+        if (parentNode.left == currentNode) {
+            parentNode.left = deleteRootNode(currentNode);
+        } else {
+            parentNode.right = deleteRootNode(currentNode);
         }
 
         return true;
